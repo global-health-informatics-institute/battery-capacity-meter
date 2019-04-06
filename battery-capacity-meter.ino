@@ -10,18 +10,20 @@
 // Processor ATmega328 (Old Bootloader)
 
 #include <EEPROM.h>
-
+#include <LiquidCrystal.h>
 #include <SoftwareSerial.h>
 
+LiquidCrystal lcd(6, 7, 8, 9, 10, 11);
+//LiquidCrystal lcd(2, 3, 4, 5, 11, 12);
 const byte ACS711_PIN = A3;
 //const int ACS711_VOLTAGE_REFERENCE = 4780;
-const int ACS711_VOLTAGE_REFERENCE = 4840;
+const int ACS711_VOLTAGE_REFERENCE = 4990;
 //const int ACS711_ZERO_LOAD_OFFSET = 512;
-const int ACS711_ZERO_LOAD_OFFSET = 516;
+const int ACS711_ZERO_LOAD_OFFSET = 518;
 
-const byte LCD_TX = 9; // D9
-const byte LCD_RX = 6; // not connected anywhere
-SoftwareSerial myLcdSerial =  SoftwareSerial(LCD_RX, LCD_TX);
+//const byte LCD_TX = 9; // D9
+//const byte LCD_RX = 6; // not connected anywhere
+//SoftwareSerial myLcdSerial =  SoftwareSerial(LCD_RX, LCD_TX);
 
 /*
  * EEPROM layout: 
@@ -56,123 +58,160 @@ long previousMilliAmpMinutes;
 
 void setupLcd()
 {
-  pinMode(LCD_TX, OUTPUT); // Arduino's Tx as transmitter to LCD
-  pinMode(LCD_RX, INPUT); //
-  myLcdSerial.begin(9600);
-  myLcdSerial.print("sc;");
-  myLcdSerial.clear();
-  delay(10);
-  myLcdSerial.print("sb0;"); // set backlight, 0=off, 1=on (sb)
-  delay(10);
-  myLcdSerial.print("sd0,0;");
-  delay(10);
-  myLcdSerial.print("ssmars monitoring;");
-  delay(10);
-  myLcdSerial.print("sd1,0;");
-  delay(10);
-  myLcdSerial.print("ssBattery Capacity;");
-  delay(10);
+    lcd.begin(16, 2);
+ // pinMode(LCD_TX, OUTPUT); // Arduino's Tx as transmitter to LCD
+  //pinMode(LCD_RX, INPUT); //
+  Serial.begin(9600);
+ lcd.clear();
+ // delay(10);
+ //lcd.print("sb0;"); // set backlight, 0=off, 1=on (sb)
+  //delay(10);
+lcd.setCursor(0,0);
+ 
+ lcd.print("mars monitoring");
+ 
+ lcd.setCursor(0,1);
+ // delay(10);
+ lcd.print("Battery Capacity");
+ // delay(10);
   delay(2000);
+  lcd.clear();
 }
 
 void printLcdSketchConfig(int rawValueCoded, int rawValueMeasured, int referenceVoltageCoded, int milliAmps) {
-  myLcdSerial.print("sc;");
-  delay(10);
-  myLcdSerial.print("sb1;"); // set backlight, 0=off, 1=on (sb)
-  delay(10);
-  myLcdSerial.print("sd0,0;"); //set coordinate (col 0,row 0)
-  delay(10);
-  myLcdSerial.print("ssno load|mA");
-  myLcdSerial.print(milliAmps);
-  myLcdSerial.print(";");
-  delay(10);
-  myLcdSerial.print("sd1,0;"); //set coordinate (col 0,row 0)
-  delay(10);
-  myLcdSerial.print("ss");
-  myLcdSerial.print("rc");
-  myLcdSerial.print(rawValueCoded);
-  myLcdSerial.print("rm");
-  myLcdSerial.print(rawValueMeasured);
-  myLcdSerial.print("vc");
-  myLcdSerial.print(referenceVoltageCoded);
-  myLcdSerial.print(";");
-  delay(10);
+ lcd.clear();
+ // delay(10);
+// lcd.print("sb1;"); // set backlight, 0=off, 1=on (sb)
+ // delay(10);
+lcd.setCursor(0,0); //set coordinate (col 0,row 0)
+ // delay(10);
+ lcd.print("no load|mA");
+ lcd.print(milliAmps);
+ ////lcd.print(";");
+ // delay(10);
+ lcd.setCursor(0,0); //set coordinate (col 0,row 0)
+ // delay(10);
+// //lcd.print("ss");
+ lcd.print("rc");
+ lcd.print(rawValueCoded);
+ lcd.print("rm");
+ lcd.print(rawValueMeasured);
+ lcd.print("vc");
+ lcd.print(referenceVoltageCoded);
+ //lcd.print(";");
+ // delay(10);
 }
 
 void printLcdHistoricRun(byte startupCounter1, unsigned int runtimeInMins1, long milliampHours1, byte startupCounter2, unsigned int runtimeInMins2, long milliampHours2) {
-  myLcdSerial.print("sc;");
-  delay(10);
-  myLcdSerial.print("sd0,0;"); //set coordinate (col 0,row 0)
-  delay(10);
-  myLcdSerial.print("ss");
-  myLcdSerial.print(startupCounter1);
-  myLcdSerial.print(":");
-  myLcdSerial.print(runtimeInMins1);
-  myLcdSerial.print("min|");
+ lcd.clear(); //lcd.clear():
+ // delay(10);
+lcd.setCursor(0,0); //set coordinate (col 0,row 0)  //lcd.setCursor(0,0);
+ // delay(10);
+// //lcd.print("ss");
+ 
+ lcd.print("R");
+ lcd.print(startupCounter1);
+ lcd.print("|");
+ lcd.print(runtimeInMins1);
+ lcd.print("min|");
   if (milliampHours1 >= 1000) {
-    myLcdSerial.print((int) milliampHours1 / 1000);
-    myLcdSerial.print("Ah;");
+   lcd.print((int) milliampHours1 / 1000);
+   lcd.print("Ah");
   } else {
-    myLcdSerial.print(milliampHours1);
-    myLcdSerial.print("mAh;");
+   lcd.print(milliampHours1);
+   lcd.print("mAh");
   }
-  delay(10);
-  myLcdSerial.print("sd1,0;"); //set coordinate (col 0,row 1)
-  delay(10);
-  myLcdSerial.print("ss");
-  myLcdSerial.print(startupCounter2);
-  myLcdSerial.print(":");
-  myLcdSerial.print(runtimeInMins2);
-  myLcdSerial.print("min|");
+ // delay(10);
+ lcd.setCursor(0,1); //set coordinate (col 0,row 1)
+ // delay(10);
+// //lcd.print("ss");
+ 
+ lcd.print("R");
+ lcd.print(startupCounter2);
+ lcd.print("|");
+ lcd.print(runtimeInMins2);
+ 
+ lcd.print("min|");
   if (milliampHours2 >= 1000) {
-    myLcdSerial.print((int) milliampHours2 / 1000);
-    myLcdSerial.print("Ah;");
+   lcd.print((int) milliampHours2 / 1000);
+   lcd.print("Ah");
   } else {
-    myLcdSerial.print(milliampHours2);
-    myLcdSerial.print("mAh;");
+   lcd.print(milliampHours2);
+   lcd.print("mAh");
   }
-  delay(10);
+ // delay(10);
 }
 
 void printLcdCurrentRun(byte startupCounter, unsigned int runtimeInMins, long milliampHours, int milliamps) {
-  myLcdSerial.print("sc;");
-  delay(10);
-  myLcdSerial.print("sd0,0;"); //set coordinate (col 0,row 0)
-  delay(10);
-  myLcdSerial.print("ss");
-  myLcdSerial.print("Run ");
-  myLcdSerial.print(startupCounter);
-  myLcdSerial.print(" | ");
-  myLcdSerial.print(runtimeInMins);
-  myLcdSerial.print("min;");
-  delay(10);
-  myLcdSerial.print("sd1,0;"); //set coordinate (col 0,row 1)
-  delay(10);
-  myLcdSerial.print("ss");
-  myLcdSerial.print(milliamps);
-  myLcdSerial.print("mA");
-  myLcdSerial.print(" | ");
+ lcd.clear();
+ // delay(10);
+   int rawValue = sampleAnalogRead(ACS711_PIN, 40, 10);
+
+lcd.setCursor(0,0); //set coordinate (col 0,row 0)
+ // delay(10);
+  //lcd.print("ss");
+ lcd.print("Run");
+ lcd.print(startupCounter);
+ lcd.print(" | ");
+ lcd.print(runtimeInMins);
+ lcd.print("min");
+ // delay(10);
+ lcd.setCursor(0,1); //set coordinate (col 0,row 1)
+ // delay(10);
+ ////lcd.print("ss");
+ lcd.print(milliamps);
+ lcd.print("mA");
+ lcd.print("| ");
   if (milliampHours >= 1000) {
-    myLcdSerial.print((int) milliampHours / 1000);
-    myLcdSerial.print("Ah;");
+    // lcd.setCursor(0,1);
+   lcd.print( milliampHours / 1000);
+   lcd.print("Ah");
   } else {
-    myLcdSerial.print(milliampHours);
-    myLcdSerial.print("mAh;");
+   lcd.print(milliampHours);
+   lcd.print("mAh");
   }
-  delay(10);
+  
+ //// delay(10);
+
+  if (rawValue > 507 && rawValue < 520) {
+    // no load detected, print diagnostic and historic values
+    while (true) {  
+      lcd.setCursor(0,0); 
+      lcd.print("LOAD WENT OFF AT.. ");
+       lcd.setCursor(0,1); 
+       lcd.print(runtimeInMins);
+ lcd.print("min");
+     
+ //lcd.print(milliamps);
+ //lcd.print("mA");
+ lcd.print(" | ");
+  if (milliampHours >= 1000) {
+    //lcd.print("|"); 
+   lcd.print( milliampHours / 1000);
+   lcd.print("Ah");
+  
+  }
+  else {
+    lcd.print(" | ");
+   lcd.print(milliampHours);
+   lcd.print("mAh");
+  }
+           }}
+    
+delay(10000);
 }
 
 void printLcdWait() {
-  myLcdSerial.print("sc;");
-  delay(10);
-  myLcdSerial.print("sd0,0;"); //set coordinate (col 0,row 0)
-  delay(10);
-  myLcdSerial.print("ssWait 1 minute;");
-  delay(10);
-  myLcdSerial.print("sd1,0;"); //set coordinate (col 0,row 1)
-  delay(10);
-  myLcdSerial.print("ssMeasuring...;");
-  delay(10);
+ //lcd.clear();
+ // delay(10);
+lcd.setCursor(0,0); //set coordinate (col 0,row 0)
+ // delay(10);
+ lcd.print("Wait 1 minute");
+ // delay(10);
+ lcd.setCursor(0,1); //set coordinate (col 0,row 1)
+ // delay(10);
+ lcd.print("Measuring...");
+ // delay(10);
 }
 
 // ---------------- Current sensing ACS 711 -------------
@@ -217,19 +256,22 @@ void setup() {
   while (!Serial) {
     delay(1);  // for Leonardo/Micro/Zero
   }
-  Serial.begin(57000);
+  Serial.begin(9600);
   Serial.println("setup");
 
-//  internalEepromClear();
-//  delay(60000);
+  //internalEepromClear();
+  //delay(60000);
   
   printInternalEeprom();
   setupLcd();
  
   int rawValue = sampleAnalogRead(ACS711_PIN, 40, 10);
   int milliAmps = -1;
+  Serial.println("raw value");
+  Serial.println(rawValue);
+  
   //  if (false) { // use this to enforce logging of current config values
-  if (rawValue > 507 && rawValue < 519) {
+  if (rawValue > 507 && rawValue < 520) {
     // no load detected, print diagnostic and historic values
     while (true) {
       rawValue = sampleAnalogRead(ACS711_PIN, 40, 10);
@@ -281,6 +323,9 @@ void setup() {
 void loop() {
   Serial.println("loop");
   delay(60000);
+   
+
+  
 
   currentRuntimeInMinutes++;
   writeRuntimeCounterForStartup(eepromSlotForStartup, currentRuntimeInMinutes);  
@@ -307,8 +352,8 @@ void loop() {
   Serial.print(currentMilliAmpHours);
   Serial.println();
 
+    }
 
-}
 
 // ------------- EEPROM -------------------
 
