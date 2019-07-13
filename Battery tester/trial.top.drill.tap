@@ -1,0 +1,83 @@
+(.../pcb-gcode-3.6.0.4/pcb-gcode.ulp)
+(Copyright 2005 - 2012 by John Johnson)
+(See readme.txt for licensing terms.)
+(This file generated from the board:)
+(.../projects/Battery tester/trial.brd)
+(Current profile is .../pcb-gcode-3.6.0.4/profiles/generic.pp  )
+(This file generated 12/19/2018 2:23 PM)
+(Settings from pcb-machine.h)
+(  Tool Size)
+(0.3000 )
+(Z Axis Settings)
+(  High     Up        Down     Drill)
+(12.7000 	2.5400 	-0.1000 	-1.7000 )
+(spindle on time = 3.0000)
+(milling depth = -0.2540)
+(text depth = -0.1270)
+(tool change at 12.7000 15.2400 18.2400 )
+(feed rate xy = F100.00 )
+(feed rate z  = F100.00 )
+(Settings from pcb-defaults.h)
+(isolate min = 0.0254)
+(isolate max = 0.3000)
+(isolate step = 0.0700)
+(Generated top outlines, top drill, )
+(Unit of measure: mm)
+( Tool|       Size       |  Min Sub |  Max Sub |   Count )
+( T01  3.556mm 0.1400in 0.0000in 0.0000in )
+( T02  1.000mm 0.0394in 0.0000in 0.0000in )
+(Metric Mode)
+G21
+(Absolute Coordinates)
+G90
+M05
+G00 Z18.2400 
+G00 X12.7000 Y15.2400 
+M06 T01  ; 3.5560 
+G01 Z0.0000 F100.00 
+M06 T01  ; 3.5560 
+G00 Z2.5400 
+M03
+G04 P3.000000
+G00 Z2.540000
+G00 X6.1570 Y5.3300 
+G01 Z-1.7000 F100.00 
+G01 Z2.540000
+(R2.5400  P1.000000)
+(G00 Z2.540000)
+G00 X6.1570 Y15.4300 
+G01 Z-1.700000
+G01 Z2.540000
+M05
+G00 Z18.2400 
+M06 T02  ; 1.0000 
+G01 Z0.0000 F100.00 
+M06 T02  ; 1.0000 
+G00 Z2.5400 
+M03
+G04 P3.000000
+G00 Z2.540000
+G00 X20.8500 Y5.2400 
+G01 Z-1.7000 F100.00 
+G01 Z2.540000
+(R2.5400  P1.000000)
+(G00 Z2.540000)
+G00 X20.8560 Y7.7800 
+G01 Z-1.700000
+G01 Z2.540000
+(G00 Z2.540000)
+G00 X20.9070 Y12.8740 
+G01 Z-1.700000
+G01 Z2.540000
+(G00 Z2.540000)
+G00 X20.9070 Y15.4280 
+G01 Z-1.700000
+G01 Z2.540000
+(G00 Z2.540000)
+G00 X20.9240 Y10.3310 
+G01 Z-1.700000
+G01 Z2.540000
+T01 
+G00 Z12.7000 
+M05
+M02
